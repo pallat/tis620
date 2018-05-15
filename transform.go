@@ -2,25 +2,24 @@ package tis620
 
 import (
 	"bytes"
+	"io/ioutil"
 
 	"golang.org/x/net/html/charset"
-	"golang.org/x/text/transform"
 )
 
 func ToUTF8(s string) (string, error) {
-	tis620Reader := bytes.NewReader([]byte(s))
+	tis620Reader := bytes.NewBufferString(s)
 
-	e, _ := charset.Lookup("ISO-8859-1")
-	isoReader := transform.NewReader(tis620Reader, e.NewEncoder())
-
-	utfReader, err := charset.NewReaderLabel("TIS-620", isoReader)
+	reader, err := charset.NewReaderLabel("TIS-620", tis620Reader)
 
 	if err != nil {
 		return "", err
 	}
 
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(utfReader)
+	b, err := ioutil.ReadAll(reader)
+	if err != nil {
+		return "", nil
+	}
 
-	return buf.String(), nil
+	return string(b), nil
 }
