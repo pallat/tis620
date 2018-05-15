@@ -7,7 +7,7 @@ import (
 	"golang.org/x/text/transform"
 )
 
-func Tis620ToUtf8(s string) (string, error) {
+func ToUTF8(s string) (string, error) {
 	tis620Reader := bytes.NewReader([]byte(s))
 
 	e, _ := charset.Lookup("ISO-8859-1")
